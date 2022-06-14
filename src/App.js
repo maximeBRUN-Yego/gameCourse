@@ -1,23 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React,  { useContext }from "react";
+
+import Header from "./components/Header";
+import Body from "./components/Body";
+import Footer from "./components/Footer";
+import './style.css'
+import { GameState } from "./constants";
+import {AppContext} from './context';
 
 function App() {
+  const context = useContext(AppContext);
+  
+  const handleGameStateChange = (newGameState) => {
+    if (newGameState === GameState.NOTSTARTED && context.levelResult === true) {
+      context.generateRandomConfig();
+      context.levelNotCompleted();
+    }
+    context.setGameState(newGameState);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <Body />
+      <Footer onGameStateChange={handleGameStateChange} />
     </div>
   );
 }
